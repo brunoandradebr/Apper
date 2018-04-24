@@ -240,6 +240,7 @@ let apper = {
                     }
 
                     [scroll]{
+                        display:grid;
                         overflow-y: auto;
                         overflow-x: hidden;
                         box-sizing: border-box;
@@ -317,6 +318,32 @@ let apper = {
 
                 // resize main height based on header and footer height
                 main.style.height = (window.innerHeight - (headerHeight + footerHeight)) + 'px'
+
+                // auto resize element's height based on others elements ex: <div autoHeight="header|footer">...</div>
+                apper.component.app.autoResizeElementsHeight()
+
+
+            },
+
+            autoResizeElementsHeight: () => {
+
+                let autoHeightElements = $('*[autoHeight]')
+
+                autoHeightElements.forEach((element) => {
+
+                    let totalHeight = window.innerHeight
+
+                    let others = element.getAttribute('autoHeight').split('|')
+
+                    others.forEach((other) => {
+
+                        totalHeight -= $(other)[0].clientHeight
+
+                    })
+
+                    element.style.height = totalHeight + 'px'
+
+                })
 
             },
 
@@ -430,6 +457,15 @@ let apper = {
                     }
 
                     setTimeout(() => {
+                        $('[scroll]').forEach((scrollable) => {
+                            scrollable.scrollTop = 1
+                        })
+
+                        // auto resize element's height based on others elements ex: <div autoHeight="header|footer">...</div>
+                        apper.component.app.autoResizeElementsHeight()
+                    }, 80);
+
+                    setTimeout(() => {
                         callback()
                     }, 300);
 
@@ -524,6 +560,15 @@ let apper = {
 
                     if (maxScroll == 0)
                         e.preventDefault()
+
+                })
+
+                // touch end
+                element.addEventListener('touchend', (e) => {
+
+                    if (e.target.tagName == 'A') {
+                        window.location = e.target.href
+                    }
 
                 })
 
