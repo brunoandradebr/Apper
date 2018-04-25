@@ -19,6 +19,22 @@ let utils = {
     isIOS: ['iPad', 'iPhone', 'iPod'].indexOf(navigator.platform) >= 0,
 
     /**
+     * Request a json file
+     */
+    request: (url, callback) => {
+
+        fetch(url).then((response) => {
+
+            response.json().then((data) => {
+                if (callback)
+                    callback(data)
+            })
+
+        })
+
+    },
+
+    /**
     * Creates a html fragment from a html string 
     */
     createHTMLFragment: (htmlstring) => {
