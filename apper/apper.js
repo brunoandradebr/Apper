@@ -568,6 +568,9 @@ let apper = {
                     if (e.touches.length > 1)
                         e.preventDefault()
 
+                    element.touchTimestamp = window.performance.now()
+                    element.touchY = e.touches[0].clientY
+
                     // get scroll container of the target touched
                     let scrollContainer = e.target.closest('[scroll]')
 
@@ -582,8 +585,12 @@ let apper = {
                 // touch end
                 element.addEventListener('touchend', (e) => {
 
+                    // avoid miss click on link tags
+                    let deltaY = e.changedTouches[0].clientY - element.touchY
+
                     if (e.target.tagName == 'A') {
-                        window.location = e.target.href
+                        if (Math.abs(deltaY) == 0)
+                            window.location = e.target.href
                     }
 
                 })
